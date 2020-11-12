@@ -12,14 +12,24 @@ class Api::PokemonsController < ApplicationController
       @pokemons = Pokemon.limit(limit).offset(offset).all
     end
 
-
     total = Pokemon.all.size
 
     is_next_page = (total - offset) >= limit
-    next_page = is_next_page ? "http://localhost:3000/api/pokemons?limit=#{limit}&offset=#{offset + limit}" : nil
+    next_params = {
+      :limit => limit,
+      :offset => offset + limit,
+      :filter => filter,
+    }.map { |key, value| "#{key}=#{value}" }.join "&"
+    next_page = is_next_page ? "http://localhost:3000/api/pokemons?#{next_params}" : nil
+
     is_prev_page = offset > 0
     prev_offset = (offset - limit) >= 0 ? offset - limit : 0
-    prev_page = is_prev_page ? "http://localhost:3000/api/pokemons?limit=#{limit}&offset=#{prev_offset}" : nil
+    prev_params = {
+      :limit => limit,
+      :offset => prev_offset,
+      :filter => filter,
+    }.map { |key, value| "#{key}=#{value}" }.join "&"
+    prev_page = is_prev_page ? "http://localhost:3000/api/pokemons?#{prev_params}" : nil
 
     render json: {
       "total"     => total,
