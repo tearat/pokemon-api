@@ -2,16 +2,16 @@ class Api::PokemonsController < ApplicationController
   # acts_as_token_authentication_handler_for User
 
   def index
-    @pokemons = Pokemon
-    @pokemons = @pokemons.limit(params[:limit])   if params[:limit]
-    @pokemons = @pokemons.offset(params[:offset]) if params[:offset]
-    @pokemons = @pokemons.all
+    limit  = params[:limit]  || 10
+    offset = params[:offset] || 0
+
+    @pokemons = Pokemon.limit(limit).offset(offset).all
 
     render json: {
       "total"    => Pokemon.all.size,
       "count"    => @pokemons.size,
-      "offset"   => params[:offset].to_i || 0,
-      "limit"    => params[:limit].to_i  || 10,
+      "offset"   => offset.to_i,
+      "limit"    => limit.to_i,
       "pokemons" => @pokemons.map { |pokemon| PokemonsListSerializer.new(pokemon) }
     }
   end
