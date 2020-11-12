@@ -17,6 +17,7 @@ class CreatePokemons < ActiveRecord::Migration[6.0]
       t.integer :base_experience
       t.integer :height
       t.integer :weight
+      t.integer :order
 
       t.boolean :is_default
 

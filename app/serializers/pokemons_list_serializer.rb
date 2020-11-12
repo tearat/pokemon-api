@@ -22,8 +22,4 @@ class PokemonsListSerializer < ActiveModel::Serializer
     relations = PokemonTypeRelation.where(:pokemon_id => self.object.id).pluck(:type_id)
     Type.where(:id => relations).pluck :title
   end
-
-  def order
-    self.object.id
-  end
 end
