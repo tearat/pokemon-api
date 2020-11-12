@@ -4,8 +4,14 @@ class Api::PokemonsController < ApplicationController
   def index
     limit  = params[:limit]  ? params[:limit].to_i  : 10
     offset = params[:offset] ? params[:offset].to_i : 0
+    filter = params[:filter] || nil
 
-    @pokemons = Pokemon.limit(limit).offset(offset).all
+    if filter
+      @pokemons = Pokemon.where("`name_clean` LIKE ?", "%#{filter}%").limit(limit).offset(offset).all
+    else
+      @pokemons = Pokemon.limit(limit).offset(offset).all
+    end
+
 
     total = Pokemon.all.size
 
